@@ -1,7 +1,8 @@
 # Kaleido_Playground
 ___
 
-### Project Setup
+### Project Setup 
+Notes: npm install should automatically install all the dependencies
 ___
 To get started, first move to the project directory and install the following dependencies:
 
