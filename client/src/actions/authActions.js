@@ -5,14 +5,15 @@ import jwt_decode from "jwt-decode";
 import {
     GET_ERRORS,
     SET_CURRENT_USER,
-    USER_LOADING
+    USER_LOADING,
+    ROLE_CHECKING
 } from "./types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
     axios
         .post("/api/users/register", userData)
-        .then(res => history.push("/login")) // re-direct to login on successful register
+        .then(() => history.push("/login")) // re-direct to login on successful register
         .catch(err =>
             dispatch({
                 type: GET_ERRORS,
@@ -45,6 +46,28 @@ export const loginUser = userData => dispatch => {
         );
 };
 
+//check user role
+export const checkUserRole = userData => dispatch => {
+    axios
+        .post("/api/users/role", userData)
+        .then(res => {
+            dispatch(setRoleForChecking(res.data.role));
+        })
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        )
+}
+
+//Set role after check in the database to verify user's role
+export const setRoleForChecking = payload => {
+    return {
+        type: ROLE_CHECKING,
+        payload
+    };
+};
 // Set logged in user
 export const setCurrentUser = decoded => {
     return {

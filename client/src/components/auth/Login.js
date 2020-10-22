@@ -15,7 +15,7 @@ class Login extends Component {
         };
     }
 
-    // ***** Need to fix logic on where to navigate if logged in
+    // // ***** Need to fix logic on where to navigate if logged in
     componentDidMount() {
         // If logged in and user navigates to Login page, redirect to dashboard
         if (this.props.auth.isAuthenticated) {
@@ -57,7 +57,7 @@ class Login extends Component {
     render() {
         const { errors } = this.state;
 
-        return(
+        return (
             <div className="container">
                 <div style={{ marginTop: "4rem" }} className="row">
                     <div className="col s8 offset-s2">
@@ -66,7 +66,7 @@ class Login extends Component {
                                 keyboard_backspace
                             </i> Back to home
                         </Link>
-                        <div className="col s12" style={{ paddingLeft: "11.250px"}}>
+                        <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                             <h4>
                                 <b>Patient</b> login below
                             </h4>

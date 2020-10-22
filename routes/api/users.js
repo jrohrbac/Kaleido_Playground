@@ -11,6 +11,7 @@ const validateLoginInput = require("../../validation/login");
 // Load Patient model
 const User = require("../../models/User");
 
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -69,7 +70,7 @@ router.post("/login", (req, res) => {
     User.findOne({ email }).then(user => {
         // Check if user exists
         if (!user) {
-            return res.status(404).json({ emailnotfound: "Email not found"});
+            return res.status(404).json({ emailnotfound: "Email not found" });
         }
 
         // Check password
@@ -79,7 +80,9 @@ router.post("/login", (req, res) => {
                 // Create JWT payload
                 const payload = {
                     id: user.id,
-                    name: user.name
+                    name: user.name,
+                    email: user.email,
+                    role: user.role //add check roles
                 };
 
                 // Sign token
@@ -106,4 +109,21 @@ router.post("/login", (req, res) => {
     });
 });
 
+// @route GET api/users/role
+// @desc Get user role to land user to correct page
+// @access public
+router.post("/role", (req, res) => {
+    const { email } = req.body;
+    console.log(email)
+    User.findOne({ email }).then(user => {
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ emailnotfound: "Email not found" });
+        }
+        res.json({
+            success: true,
+            role: user.role
+        });
+    });
+});
 module.exports = router;

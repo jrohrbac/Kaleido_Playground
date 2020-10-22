@@ -18,15 +18,15 @@ class RegisterAdmin extends Component {
         };
     }
 
-    componentDidMount() {
-        // If logged in and user navigates to Register page, redirect to dashboard
-        if (this.props.auth.isAuthenticated) {
-            if (this.props.auth.role == "Patient")
-                this.props.history.push("/PatientDash");
-            else if (this.props.auth.role == "Admin")
-                this.props.history.push("AdminDash");
-        }
-    }
+    // componentDidMount() {
+    //     // If logged in and user navigates to Register page, redirect to dashboard
+    //     if (this.props.auth.isAuthenticated) {
+    //         if (this.props.auth.role == "Patient")
+    //             this.props.history.push("/PatientDash");
+    //         else if (this.props.auth.role == "Admin")
+    //             this.props.history.push("AdminDash");
+    //     }
+    // }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.errors) {
