@@ -12,8 +12,12 @@ import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import RegisterAdmin from "./components/auth/RegisterAdmin";
+import LoginAdmin from "./components/auth/LoginAdmin";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import AdminDash from "./components/dashboard/AdminDash";
+import PatientDash from "./components/dashboard/PatientDash";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -32,7 +36,7 @@ if (localStorage.jwtToken) {
         store.dispatch(logoutUser());
 
         // Redirect to login
-        window.location.href = "./login";
+        window.location.href = "./Landing";
     }
 }
 
@@ -46,8 +50,11 @@ class App extends Component {
                         <Route exact path="/" component={Landing} />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
+                        <Route exact path="/registeradmin" component={RegisterAdmin} />
+                        <Route exact path="/loginadmin" component={LoginAdmin} />
                         <Switch>
-                            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                            <PrivateRoute exact path="/AdminDash" component={AdminDash} />
+                            <PrivateRoute exact path="/PatientDash" component={PatientDash} />
                         </Switch>
                     </div>
                 </Router>

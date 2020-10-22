@@ -13,14 +13,18 @@ class Register extends Component {
             email: "",
             password: "",
             password2: "",
+            role: "Patient",
             errors: {}
         };
     }
-
+    // Need to update to send to patient or admin dashboard
     componentDidMount() {
         // If logged in and user navigates to Register page, redirect to dashboard
         if (this.props.auth.isAuthenticated) {
-            this.props.history.push("/dashboard");
+            if (this.props.auth.role == "Patient")
+                this.props.history.push("/PatientDash");
+            else if (this.props.auth.role == "Admin")
+                this.props.history.push("AdminDash");
         }
     }
 
@@ -43,7 +47,8 @@ class Register extends Component {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
-            password2: this.state.password2
+            password2: this.state.password2,
+            role: this.state.role
         };
 
         this.props.registerUser(newUser, this.props.history);
@@ -63,10 +68,13 @@ class Register extends Component {
                         </Link>
                         <div className="col s12" style={{ paddingLeft: "11.250px"}}>
                             <h4>
-                                <b>Register</b> below
+                                <b>Register</b> below as a new patient
                             </h4>
                             <p className="grey-text text-darken-1">
                                 Already have an account? <Link to="/login">Log in</Link>
+                            </p>
+                            <p className="grey-text text-darken-1">
+                                Are you an admin? Register here. <Link to="/login">Register</Link>
                             </p>
                         </div>
                         <form noValidate onSubmit={this.onSubmit}>

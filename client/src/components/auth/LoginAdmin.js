@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
 
-class Login extends Component {
+class LoginAdmin extends Component {
     constructor() {
         super();
         this.state = {
@@ -15,20 +15,19 @@ class Login extends Component {
         };
     }
 
-    // ***** Need to fix logic on where to navigate if logged in
     componentDidMount() {
         // If logged in and user navigates to Login page, redirect to dashboard
         if (this.props.auth.isAuthenticated) {
-            if (this.props.auth.role == "Patient")
+            if (this.role == "Admin")
+                this.props.history.push("/AdminDash");
+            else if (this.role == "Patient")
                 this.props.history.push("/PatientDash");
-            else if (this.props.auth.role == "Admin")
-                this.props.history.push("AdminDash");
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth.isAuthenticated) {
-            this.props.history.push("/PatientDash"); // push user to dashboard when they login
+            this.props.history.push("/AdminDash"); // push user to dashboard when they login
         }
 
         if (nextProps.errors) {
@@ -68,10 +67,10 @@ class Login extends Component {
                         </Link>
                         <div className="col s12" style={{ paddingLeft: "11.250px"}}>
                             <h4>
-                                <b>Patient</b> login below
+                                <b>Admin</b> login below
                             </h4>
                             <p className="grey-text text-darken-1">
-                                Don't have an account? <Link to="/register">Register</Link>
+                                Don't have an account? <Link to="/registeradmin">Register</Link>
                             </p>
                         </div>
                         <form noValidate onSubmit={this.onSubmit}>
@@ -131,7 +130,7 @@ class Login extends Component {
     }
 }
 
-Login.propTypes = {
+LoginAdmin.propTypes = {
     loginUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
@@ -145,4 +144,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     { loginUser }
-)(Login);
+)(LoginAdmin);
