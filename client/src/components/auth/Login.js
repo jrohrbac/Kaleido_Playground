@@ -6,6 +6,8 @@ import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
 
 class Login extends Component {
+    
+
     constructor() {
         super();
         this.state = {
@@ -17,12 +19,17 @@ class Login extends Component {
 
     // ***** Need to fix logic on where to navigate if logged in
     componentDidMount() {
+        const { user } = this.props.auth;
         // If logged in and user navigates to Login page, redirect to dashboard
         if (this.props.auth.isAuthenticated) {
-            if (this.props.auth.role == "Patient")
+            if (user.role === "Patient") {
                 this.props.history.push("/PatientDash");
-            else if (this.props.auth.role == "Admin")
+            }
+                
+            else if (user.role == "Admin") {
                 this.props.history.push("AdminDash");
+            }
+                
         }
     }
 
