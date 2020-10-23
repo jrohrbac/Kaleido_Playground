@@ -7,11 +7,12 @@ class PatientDash extends Component {
     onLogoutClick = e => {
         e.preventDefault();
         this.props.logoutUser();
+        console.log('logging out');
     };
 
     render() {
         const { user } = this.props.auth;
-
+        console.log(user);
         return(
             <div style={{ height: "75vh" }} className="container valign-wrapper">
                 <div className="row">

@@ -16,12 +16,17 @@ class LoginAdmin extends Component {
     }
 
     componentDidMount() {
+        const { user } = this.props.auth;
         // If logged in and user navigates to Login page, redirect to dashboard
         if (this.props.auth.isAuthenticated) {
-            if (this.role == "Admin")
-                this.props.history.push("/AdminDash");
-            else if (this.role == "Patient")
+            if (user.role === "Patient") {
                 this.props.history.push("/PatientDash");
+            }
+                
+            else if (user.role == "Admin") {
+                this.props.history.push("AdminDash");
+            }
+                
         }
     }
 
