@@ -22,17 +22,23 @@ class LoginAdmin extends Component {
             if (user.role === "Patient") {
                 this.props.history.push("/PatientDash");
             }
-                
+
             else if (user.role == "Admin") {
                 this.props.history.push("AdminDash");
             }
-                
+
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        const { user } = this.props.auth;
         if (nextProps.auth.isAuthenticated) {
-            this.props.history.push("/AdminDash"); // push user to dashboard when they login
+            if (user.role === "Admin") {
+                this.props.history.push("/AdminDash"); // push user to dashboard when they login
+            }
+            else if (user.role === "Patient") {
+                this.props.history.push("/PatientDash"); // push user to dashboard when they login
+            }
         }
 
         if (nextProps.errors) {
