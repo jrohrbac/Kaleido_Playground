@@ -1,9 +1,62 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import { logoutUser, uploadImage } from "../../actions/authActions";
 
 class PatientDash extends Component {
+    state = {
+        selectedFile: null
+    };
+
+    // On file select, update state
+    onFileChange = event => {
+        this.setState({ selectedFile: event.target.files[0] });
+    };
+
+    // On file upload, create and update formData object
+    onFileUpload = () => {
+        const formData = new FormData();
+        const { user } = this.props.auth
+
+        formData.append(
+            "myFile",
+            this.state.selectedFile,
+            this.state.selectedFile.name
+        );
+
+        console.log(this.state.selectedFile);
+
+        //Request to backend api and send formData object
+        this.props.uploadImage(user);
+    };
+        // Display content on screen
+    fileData = () => {
+        if (this.state.selectedFile) {
+            return (
+                <div>
+                    <h2>File Details:</h2>
+                    <p>File Name: {this.state.selectedFile.name}</p>
+                    <p>File Type: {this.state.selectedFile.type}</p>
+                    <p>
+                        Last Modified:{" "}
+                        {this.state.selectedFile.lastModifiedDate.toDateString()}
+                    </p>
+                    <br />
+                    <h2>Gallery</h2>
+                    <img src={this.state.selectedFile.name} alt="Uploaded"/>
+                </div>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <br />
+                    <h4>Choose image before pressing the upload button</h4>
+                </div>
+            );
+        }
+    };
+
     onLogoutClick = e => {
         e.preventDefault();
         this.props.logoutUser();
@@ -25,6 +78,15 @@ class PatientDash extends Component {
                                 app as a patient 👏
                             </p>
                         </h4>
+                        <br />
+                        <div>
+                            <input type="file" onChange={this.onFileChange} />
+                            <button onClick={this.onFileUpload}>
+                                Upload image
+                            </button>
+                        </div>
+                        {this.fileData()}
+                        <br />
                         <button
                             style={{
                                 width: "150px",
@@ -45,6 +107,7 @@ class PatientDash extends Component {
 }
 
 PatientDash.propTypes = {
+    uploadImage: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
@@ -55,5 +118,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { logoutUser }
+    { logoutUser, uploadImage }
 )(PatientDash);

@@ -60,6 +60,19 @@ export const setUserLoading = () => {
     };
 };
 
+export const uploadImage = userData => dispatch => {
+    axios
+        .post("/api/users/uploadImage", userData)
+        .then(res => {
+            alert('Updated successfully!')
+            //const { info } = res.data;
+        })
+        .catch(err => {
+            console.log(err.response);
+            alert('An error occurred! Try submitting again.');
+        });
+};
+
 // Log user out
 export const logoutUser = () => dispatch => {
     // Remove token from local localStorage

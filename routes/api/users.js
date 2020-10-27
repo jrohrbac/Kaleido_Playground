@@ -107,4 +107,20 @@ router.post("/login", (req, res) => {
     });
 });
 
+// @route POST api/users/uploadImage
+// @desc Upload patient image
+// @access Patient Only
+router.post("/uploadImage", (req, res) => {
+    console.log("req.body.email", req.body.email);
+    const email = req.body.email;
+    //const image = req.body.formData;
+    // Find user by email
+    User.findOneAndUpdate({ email: email }, { name: "Testing" }, {new: true}, (err, doc) => {
+        if (err) {
+            console.log("Something went wrong while updating.");
+        }
+        console.log(doc);
+    });
+});
+
 module.exports = router;
