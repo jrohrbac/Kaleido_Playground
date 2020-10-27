@@ -23,6 +23,7 @@ export const registerUser = (userData, history) => dispatch => {
 
 // Login - get user token
 export const loginUser = userData => dispatch => {
+    console.log('userData' + JSON.stringify(userData));
     axios
         .post("/api/users/login", userData)
         .then(res => {
@@ -61,10 +62,12 @@ export const setUserLoading = () => {
 };
 
 export const uploadImage = userData => dispatch => {
+    console.log('userData' + JSON.stringify(userData));
     axios
         .post("/api/users/uploadImage", userData)
         .then(res => {
-            alert('Updated successfully!')
+            alert('Updated successfully!');
+            console.log('success uploading');
             //const { info } = res.data;
         })
         .catch(err => {

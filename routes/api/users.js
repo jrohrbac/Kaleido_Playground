@@ -65,6 +65,9 @@ router.post("/login", (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    console.log('email :' + email);
+    console.log('email :' +  req.body.email);
+
     // Find user by email
     User.findOne({ email }).then(user => {
         // Check if user exists
@@ -111,15 +114,31 @@ router.post("/login", (req, res) => {
 // @desc Upload patient image
 // @access Patient Only
 router.post("/uploadImage", (req, res) => {
-    console.log("req.body.email", req.body.email);
+    // try to see this console log, it does not have an email property in this object
+    console.log("req.body", req.body);
+    console.log("req.body.name: " +  req.body.name);
+
+    // Todo: try to figure out how to update the the user object 
+
+    // Todo: req.body.email is not in the user object, that's why it's null
+    // If you want to find user by email, you need to add the email to the user object
+    // so this req.body can get the email
     const email = req.body.email;
     //const image = req.body.formData;
     // Find user by email
-    User.findOneAndUpdate({ email: email }, { name: "Testing" }, {new: true}, (err, doc) => {
+    // User.findOneAndUpdate({ email: email }, { name: "Testing123321" }, {new: true}, (err, doc) => {
+    //     if (err) {
+    //         console.log("Something went wrong while updating.");
+    //     }
+    //     console.log('doc is:' + doc);
+    // });
+
+    // Find user by id 
+    User.findOneAndUpdate({ _id: req.body.id }, { name: "newNameHungTesting" }, {new: true}, (err, doc) => {
         if (err) {
             console.log("Something went wrong while updating.");
         }
-        console.log(doc);
+        console.log('doc is:' + doc);
     });
 });
 
