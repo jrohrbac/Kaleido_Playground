@@ -1,15 +1,20 @@
-const SimpleStorage = artifacts.require("SimpleStorage");
+const MedicalImageTransfer = artifacts.require("./MedicalImageTransfer.sol");
 
-contract("SimpleStorage", accounts => {
-  it("...should store the value 89.", async () => {
-    const simpleStorageInstance = await SimpleStorage.deployed();
-
-    // Set value of 89
-    await simpleStorageInstance.set(89, { from: accounts[0] });
-
-    // Get stored value
-    const storedData = await simpleStorageInstance.storedData.call();
-
-    assert.equal(storedData, 89, "The value 89 was not stored.");
-  });
+contract("MedicalImageTransfer", accounts => {
+  var medicalImageTransferInstance;
+  it("test add new user", () => {
+    return MedicalImageTransfer.deployed().then(instance => {
+      medicalImageTransferInstance = instance;
+      const name = "Bao";
+      const role = 0;
+      return medicalImageTransferInstance.addNewUser(name, role, { from: accounts[0] });
+    }).then(() => {
+      return medicalImageTransferInstance.userSchema(accounts[0]);
+    })
+      .then((user) => {
+        assert.equal(user[1], accounts[0], "correct user on-chain address");
+        assert.equal(user[2], "Bao", "correct user name");
+        assert.equal(user[3], 0, "correct user role");
+      });
+  })
 });

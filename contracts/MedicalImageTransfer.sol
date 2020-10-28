@@ -11,53 +11,69 @@ contract MedicalImageTransfer{
     struct ImageData{
         uint256 id;
         Person owner;
-        mapping(Person => bool) doctorsWithAccess;
         string metadata;
         string pointer;
     }
-    
-    address public user; 
-    mapping(address => Person) userSchema;
-    mapping(Person => ImageData[]) patientData;
-    uint256 userCount;
-    uint256 imgCount;
-    
-    constructor() public {
-        require(msg.sender != address(0));
-        patient = msg.sender;
+    struct Set{
+        address[] addresses;
+        mapping(address => bool) is_in;
     }
+    mapping(address => Person) public userSchema;
+    address[] public doctors;
+    address[] public patients;
+    mapping(address => bool) isUserExisted;
+    mapping(uint => bool) isImageExist;
+    mapping(address => mapping(uint => ImageData)) patientData;
+    mapping(address => Set) patientAccessListForADoctor;
+    uint256 public userCount;      
+    uint256 public imgCount;
+    uint256 public doctorsCount;
+    uint256 public patientsCount;
+  
     
-    function addNewUser(address _ads, string memory _name, Role _role) public {
+    function addNewUser(string memory _name, Role _role) public {
+        require(!isUserExisted[msg.sender]);
+        require(bytes(_name).length > 0);
         require(uint(_role) < 2);
         userCount++;
-        Person p = Person(userCount, _ads, _name, _role);
-        userSchema[ads] = p;
-    }
-    function uploadImage(address _ads, string memory metadata, string memory pointer) public {
-        require(userSchema[_ads]);
-        uploadImage(userSchema[_ads], metadata, pointer);
-    }
-    function uploadImage(Person _p, string memory metadata, string memory pointer) {
-        
-        require(_p.role == Role.Patient);
-        imgCount++;
-        patientData[_p] = ImageData(imgCount, _p, [], metadata, pointer);
+        Person memory p = Person(userCount, msg.sender, _name, _role);
+        userSchema[msg.sender] = p;
+        isUserExisted[msg.sender] = true;
+        if(uint(_role) == 0){
+            doctors.push(msg.sender);
+            doctorsCount++;
+        }else{
+            patients.push(msg.sender);
+            patientsCount++;
+        }
     }
     
-    function getImageData(address _doctor, address _patient) public returns (string[] message){
-        require(userSchema[_doctor]);
-        require(userSchema[_patient]);
-        return getImageData(userSchema[_doctor], userSchema[_patient]);
+    function uploadImage(string memory metadata, string memory pointer) public {
+        require(isUserExisted[msg.sender]);
+        uploadImage(userSchema[msg.sender], metadata, pointer);
     }
-    function getImageData(Person _doctor, Person _patient) returns (string[] message){
+    function uploadImage(Person memory _p, string memory metadata, string memory pointer) private {
+        require(_p.role == Role.Patient);
+        imgCount++;
+        patientData[_p.ads][imgCount] = ImageData(imgCount, _p, metadata, pointer);
+        isImageExist[imgCount] = true;
+    }
+    
+    function getImageData(address _patient, uint _imgId) public returns (string memory metadata, string memory pointers){
+        require(isUserExisted[msg.sender]);
+        require(isUserExisted[_patient]);
+        return getImageData(userSchema[msg.sender], userSchema[_patient], _imgId);
+    }
+    function getImageData(Person memory _doctor, Person memory _patient, uint _imgId) private returns (string memory metadata, string memory pointers) {
         require(_doctor.role == Role.Doctor);
         require(_patient.role == Role.Patient);
-        require(ImageData[_patient]);
-        ImageData img = ImageData[_patient];
-        if(!img.doctorsWithAccess[_doctor]){
-            img.doctorsWithAccess[_doctor] = true;
+        require(isImageExist[_imgId]);
+        ImageData memory img = patientData[_patient.ads][_imgId];
+        if(!patientAccessListForADoctor[_doctor.ads].is_in[_doctor.ads]){
+            patientAccessListForADoctor[_doctor.ads].addresses.push(_doctor.ads);
+            patientAccessListForADoctor[_doctor.ads].is_in[_doctor.ads] = true;
         }
-        return [img.metadata, img.pointer];
+        return (img.metadata, img.pointer);
         
     }
     
