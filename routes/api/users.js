@@ -32,7 +32,8 @@ router.post("/register", (req, res) => {
                 name: req.body.name,
                 email: req.body.email,
                 password: req.body.password,
-                role: req.body.role
+                role: req.body.role,
+                pictures: []
             });
 
             // Hash password before saving in database
@@ -83,7 +84,8 @@ router.post("/login", (req, res) => {
                 const payload = {
                     id: user.id,
                     name: user.name,
-                    role: user.role
+                    role: user.role,
+                    pictures: user.pictures
                 };
 
                 // Sign token
@@ -118,27 +120,15 @@ router.post("/uploadImage", (req, res) => {
     console.log("req.body", req.body);
     console.log("req.body.name: " +  req.body.name);
 
-    // Todo: try to figure out how to update the the user object 
+    // Todo: try to figure out how to update the user object
 
-    // Todo: req.body.email is not in the user object, that's why it's null
-    // If you want to find user by email, you need to add the email to the user object
-    // so this req.body can get the email
-    const email = req.body.email;
-    //const image = req.body.formData;
-    // Find user by email
-    // User.findOneAndUpdate({ email: email }, { name: "Testing123321" }, {new: true}, (err, doc) => {
-    //     if (err) {
-    //         console.log("Something went wrong while updating.");
-    //     }
-    //     console.log('doc is:' + doc);
-    // });
-
-    // Find user by id 
-    User.findOneAndUpdate({ _id: req.body.id }, { name: "newNameHungTesting" }, {new: true}, (err, doc) => {
+    // Find user by id
+    User.findOneAndUpdate({ _id: req.body.id }, { pictures: req.body.pictures }, {new: true}, (err, doc) => {
         if (err) {
             console.log("Something went wrong while updating.");
         }
         console.log('doc is:' + doc);
+        console.log("req.body", req.body);
     });
 });
 

@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// Todo: change type to binData for images
+const ImgSchema = new Schema({ name: String, image: Buffer });
+
 // Create Schema
 const UserSchema = new Schema({
     name: {
@@ -21,6 +24,10 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
+        required: true
+    },
+    pictures: {
+        type: [ImgSchema],
         required: true
     }
 });

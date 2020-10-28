@@ -11,6 +11,7 @@ class PatientDash extends Component {
     // On file select, update state
     onFileChange = event => {
         this.setState({ selectedFile: event.target.files[0] });
+        console.log("Image type: " + typeof(selectedFile));
     };
 
     // On file upload, create and update formData object
@@ -24,13 +25,22 @@ class PatientDash extends Component {
             this.state.selectedFile.name
         );
 
-        console.log(this.state.selectedFile);
+        // Todo: Find out how to properly store image files to MongoDb (maybe use multer or GridFS)
+        // Store image in ImgSchema format and then add to user's pictures
+        const img = {
+            name: this.state.selectedFile.name,
+            image: Buffer.from((this.state.selectedFile).toString('base64'), 'base64')
+        };
+        user.pictures.push(img);
 
         //Request to backend api and send formData object
         this.props.uploadImage(user);
     };
-        // Display content on screen
+
+    // Display content on screen
     fileData = () => {
+        // Images can be displayed using the following format:
+        // <img src={URL.createObjectURL(this.state.selectedFile)} height={100} width={100} alt='xray'/>
         if (this.state.selectedFile) {
             return (
                 <div>
@@ -43,7 +53,6 @@ class PatientDash extends Component {
                     </p>
                     <br />
                     <h2>Gallery</h2>
-                    <img src={this.state.selectedFile.name} alt="Uploaded"/>
                 </div>
             );
         }
@@ -65,7 +74,8 @@ class PatientDash extends Component {
 
     render() {
         const { user } = this.props.auth;
-        console.log(user);
+        console.log("User: " + JSON.stringify(user));
+
         return(
             <div style={{ height: "75vh" }} className="container valign-wrapper">
                 <div className="row">
