@@ -26,11 +26,15 @@ class PatientDash extends Component {
         );
 
         // Todo: Find out how to properly store image files to MongoDb (maybe use multer or GridFS)
+        //var reader = new FileReader();
+        //reader.readAsDataURL(this.state.selectedFile);
+        //console.log(reader.result);
         // Store image in ImgSchema format and then add to user's pictures
         const img = {
             name: this.state.selectedFile.name,
             image: Buffer.from((this.state.selectedFile).toString('base64'), 'base64')
         };
+
         user.pictures.push(img);
 
         //Request to backend api and send formData object
