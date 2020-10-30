@@ -10,6 +10,7 @@ const validateLoginInput = require("../../validation/login");
 
 // Load Patient model
 const User = require("../../models/User");
+const Image = require("../../models/Image");
 
 // @route POST api/users/register
 // @desc Register user
@@ -119,16 +120,66 @@ router.post("/uploadImage", (req, res) => {
     // try to see this console log, it does not have an email property in this object
     console.log("req.body", req.body);
     console.log("req.body.name: " +  req.body.name);
-
+    console.log("req.body.pictures: " + req.body.pictures);
     // Todo: try to figure out how to update the user object
 
     // Find user by id
-    User.findOneAndUpdate({ _id: req.body.id }, { pictures: req.body.pictures }, {new: true}, (err, doc) => {
-        if (err) {
-            console.log("Something went wrong while updating.");
-        }
-        console.log('doc is:' + doc);
-        console.log("req.body", req.body);
+    // User.findOneAndUpdate({ _id: req.body.id }, { pictures: req.body.pictures }, {new: true}, (err, doc) => {
+    //     if (err) {
+    //         console.log("Something went wrong while updating.");
+    //     }
+    //     console.log('doc is:' + doc);
+    //     console.log("req.body", req.body);
+    // });
+    console.log()
+    const newImage = new Image({
+        owner: req.body.id,
+        image: req.body.image,
+        name: req.body.name,
+    });
+    
+    newImage
+        .save()
+        .then(result => {
+            // Todo: figure out the user id
+            // fix syntax here
+            User.findOne({_id: req.body.id}, (err, user) => {
+                console.log('testing saving image to user');
+                console.log('req.body.id' + req.body.id);
+                if (err) console.log(err);
+                console.log('user ' + user);
+                if (user) {
+                    console.log('testing saving image to user, !!!!!!!');
+                    console.log('saving image to user');
+                    user.images.push(newImage);
+                    user.save();
+                    res.json({message: "Image Created!!!"});
+                }
+            });
+        })
+        .catch(err => console.log(err));
+});
+
+router.post("/getImages", (req, res) => {
+    // try to see this console log, it does not have an email property in this object
+    console.log("req.body", req.body);
+    console.log("testing here" + req.body.userId);
+
+    // User.find({_id: req.body.userId}, {pictures}, (err, doc) => {
+    // User.findOne({_id: req.body.id}, (err, doc) => {
+    //     if (err) {
+    //         console.log("Something went wrong while getting images");
+    //     }
+
+    //     console.timeLog("doc is: " + doc);
+    //     res.send(doc.pictures);
+    // })
+
+    User.findOne({_id: req.body.id}).populate("images").then((data) => {
+        console.log('images ' + data.images);
+        res.send(data.images);
+    }).catch((err) => {
+        console.log(err);
     });
 });
 

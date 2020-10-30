@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser, uploadImage } from "../../actions/authActions";
+import { logoutUser, uploadImage, getImages } from "../../actions/authActions";
+import { useState, useEffect } from 'react';
 
 class PatientDash extends Component {
     state = {
@@ -35,12 +36,20 @@ class PatientDash extends Component {
             image: Buffer.from((this.state.selectedFile).toString('base64'), 'base64')
         };
 
-        user.pictures.push(img);
+        // user.pictures.push(img);
+        
+        console.log(user.pictures);
 
         //Request to backend api and send formData object
         this.props.uploadImage(user);
     };
 
+    componentDidMount() {
+        console.log('testing didamount');
+        const { user } = this.props.auth;
+        console.log(user);
+        let images = this.props.getImages(user);
+    }
     // Display content on screen
     fileData = () => {
         // Images can be displayed using the following format:
@@ -78,8 +87,6 @@ class PatientDash extends Component {
 
     render() {
         const { user } = this.props.auth;
-        console.log("User: " + JSON.stringify(user));
-
         return(
             <div style={{ height: "75vh" }} className="container valign-wrapper">
                 <div className="row">
@@ -121,6 +128,7 @@ class PatientDash extends Component {
 }
 
 PatientDash.propTypes = {
+    getImages: PropTypes.func.isRequired,
     uploadImage: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
@@ -132,5 +140,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { logoutUser, uploadImage }
+    { logoutUser, uploadImage, getImages }
 )(PatientDash);

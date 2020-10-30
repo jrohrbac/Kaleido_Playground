@@ -85,3 +85,24 @@ export const logoutUser = () => dispatch => {
     // Set current user to empty object {} which will set isAuthenticated to false
     dispatch(setCurrentUser({}));
 };
+
+export const getImages = userData => dispatch => {
+    console.log('userData' + JSON.stringify(userData));
+    axios
+        .post("/api/users/getImages", userData)
+        .then(res => {
+            // figure out how to pass/store res.data which is the pictures array to front end and display it
+
+            console.log('res.data.length: ' + JSON.stringify(res.data.length));
+            console.log(res.data[0]);
+            // res.send(res.data);
+            alert('Get Images successfully!');
+            // console.log('success uploading');
+            //const { info } = res.data;
+        })
+        .catch(err => {
+            console.log(err.response);
+            console.log('failed getting images');
+            alert('An error occurred! Try submitting again.');
+        });
+};

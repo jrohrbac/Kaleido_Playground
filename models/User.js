@@ -26,10 +26,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    pictures: {
-        type: [ImgSchema],
-        required: true
-    }
+    images: [{
+        type: Schema.Types.ObjectId,
+        ref: "Image"
+    }]
 });
 
 module.exports = User = mongoose.model("users", UserSchema);
