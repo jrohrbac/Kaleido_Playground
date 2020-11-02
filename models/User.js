@@ -26,6 +26,9 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    image: {
+        type: Buffer
+    },
     images: [{
         type: Schema.Types.ObjectId,
         ref: "Image"

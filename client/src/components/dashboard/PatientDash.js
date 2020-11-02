@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { logoutUser, uploadImage, getImages } from "../../actions/authActions";
 import { useState, useEffect } from 'react';
 
+
 class PatientDash extends Component {
     state = {
         selectedFile: null
@@ -31,14 +32,8 @@ class PatientDash extends Component {
         //reader.readAsDataURL(this.state.selectedFile);
         //console.log(reader.result);
         // Store image in ImgSchema format and then add to user's pictures
-        const img = {
-            name: this.state.selectedFile.name,
-            image: Buffer.from((this.state.selectedFile).toString('base64'), 'base64')
-        };
 
-        // user.pictures.push(img);
-        
-        console.log(user.pictures);
+        user.image = Buffer.from((this.state.selectedFile).toString('base64'), 'base64');
 
         //Request to backend api and send formData object
         this.props.uploadImage(user);
@@ -48,7 +43,8 @@ class PatientDash extends Component {
         console.log('testing didamount');
         const { user } = this.props.auth;
         console.log(user);
-        let images = this.props.getImages(user);
+        const images = this.props.getImages(user);
+        console.log("Patient images: " + user.images);
     }
     // Display content on screen
     fileData = () => {

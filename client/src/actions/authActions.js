@@ -86,19 +86,20 @@ export const logoutUser = () => dispatch => {
     dispatch(setCurrentUser({}));
 };
 
-export const getImages = userData => dispatch => {
+export const getImages = userData => async dispatch => {
     console.log('userData' + JSON.stringify(userData));
-    axios
+    await axios
         .post("/api/users/getImages", userData)
         .then(res => {
             // figure out how to pass/store res.data which is the pictures array to front end and display it
-
+            console.log('res.data: ' + JSON.stringify(res.data));
             console.log('res.data.length: ' + JSON.stringify(res.data.length));
             console.log(res.data[0]);
             // res.send(res.data);
             alert('Get Images successfully!');
             // console.log('success uploading');
-            //const { info } = res.data;
+            //return res.data;
+            return JSON.stringify(res.data);
         })
         .catch(err => {
             console.log(err.response);

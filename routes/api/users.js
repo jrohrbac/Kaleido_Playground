@@ -34,7 +34,7 @@ router.post("/register", (req, res) => {
                 email: req.body.email,
                 password: req.body.password,
                 role: req.body.role,
-                pictures: []
+                images: []
             });
 
             // Hash password before saving in database
@@ -86,7 +86,7 @@ router.post("/login", (req, res) => {
                     id: user.id,
                     name: user.name,
                     role: user.role,
-                    pictures: user.pictures
+                    images: user.images
                 };
 
                 // Sign token
@@ -131,13 +131,13 @@ router.post("/uploadImage", (req, res) => {
     //     console.log('doc is:' + doc);
     //     console.log("req.body", req.body);
     // });
-    console.log()
+    console.log();
     const newImage = new Image({
         owner: req.body.id,
         image: req.body.image,
-        name: req.body.name,
+        name: req.body.name
     });
-    
+
     newImage
         .save()
         .then(result => {
